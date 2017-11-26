@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 #import codecs
 URL = "https://www.bing.com/academic/"
 html = request.urlopen(URL).read().decode("utf-8")
-htmlfile = open("temp.html", "w", encoding="gb2312")
+htmlfile = open("temp.html", "w", encoding="utf-8")
 htmlfile.write("<html><head>......</head><body>")
 soup = BeautifulSoup(html, "html.parser")
 dic = {"title": "", "desc": "", "source": ""}

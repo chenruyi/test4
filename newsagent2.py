@@ -4,8 +4,10 @@
 from urllib import request
 import xml.etree.ElementTree as ET
 import re
-from tkinter import *
+
 from tkinter import ttk
+from tkinter import Tk
+from tkinter import StringVar, VERTICAL, NSEW, NS
 """
 表示数据
 """
@@ -54,6 +56,7 @@ class RSSSource:
 class MianWindow:
     def __init__(self):
         self.urlstr = None
+        self.items = None
         self.frame = Tk()
         self.frame.title('RSS 阅读')
         self.frame_top = ttk.Frame(self.frame)
@@ -65,19 +68,18 @@ class MianWindow:
             self.frame_top, text='确定', command=self.button_submitUrl)
         self.frame_center = ttk.Frame(
             self.frame, width=self.frame.winfo_screenwidth())
-
-        self.frame_top.grid(row=0, column=0)
-        self.frame_center.grid(row=1, column=0)
-
+        self.frame_center_left = ttk.Frame(self.frame, height=self.frame.winfo_height(), width=200)
+        self.frame_top.grid(row=0, column = 0)
+        self.frame_center.grid(row=1, column=1)
+        self.frame_center_left.grid(row=1, column=0)
         self.UrlLabel.grid(row=0, column=0)
         self.urlentry.grid(row=0, column=1)
-        self.SureBtn.grid(row=0, column=2)
-
+        self.SureBtn.grid(row = 0, column = 2)
         self.tree = ttk.Treeview(
             self.frame_center,
             show='headings',
             height=18,
-            columns=('时间', '题目', '内容'))
+            columns=('时间', '作者', '题目'))
         self.vbar = ttk.Scrollbar(
             self.frame_center, orient=VERTICAL, command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.vbar.set)
@@ -90,17 +92,17 @@ class MianWindow:
         # if self.tree.children[0]['题目']:
         #     w2 = len(self.tree.children[0]['题目'])
         # else:
-        w2 = 300
+        w2 = 100
         # if self.tree.children[0]['内容']:
         #     w3 = len(self.tree.children[0]['内容'])
         # else:
-        w3 = 500
+        w3 = 300
         self.tree.column('时间', width=w1, anchor='center')
-        self.tree.column('题目', width=w2, anchor='center')
-        self.tree.column('内容', width=w3, anchor='center')
+        self.tree.column('作者', width=w2, anchor='center')
+        self.tree.column('题目', width=w3, anchor='center')
         self.tree.heading('时间', text='时间')
+        self.tree.heading('作者', text='作者')
         self.tree.heading('题目', text='题目')
-        self.tree.heading('内容', text='内容')
 
         self.tree.grid(row=0, column=0, sticky=NSEW)
         self.vbar.grid(row=0, column=1, sticky=NS)
@@ -115,8 +117,7 @@ class MianWindow:
             self.tree.delete(item)
         for item in self.items:
             self.tree.insert('','end',\
-            values=(item.body['pubDate'],item.title,item.body['description']))
-
+            values=(item.body['pubDate'],item.body['author'],item.title))
 
     def GetUrl(self):
         if self.urlstr:
@@ -131,7 +132,6 @@ class MianWindow:
             runDefaultSetup()
         else:
             self.urlstr = None
-        
 
 
 def runDefaultSetup():
@@ -143,7 +143,6 @@ def runDefaultSetup():
     win.receiveItems(items)
     win.getItems()
     win.frame.mainloop()
-
 
 
 if __name__ == '__main__':
