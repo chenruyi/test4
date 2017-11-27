@@ -6,9 +6,12 @@ from urllib.parse import quote
 import xml.etree.ElementTree as ET
 import re
 
+from tkinter import StringVar
+from tkinter import Label
 from tkinter import ttk
+from tkinter import VERTICAL
 from tkinter import Tk
-from tkinter import *
+from tkinter import Menu
 from virscrollbarframe import VerticalScrolledFrame
 from channel import *
 """
@@ -132,7 +135,7 @@ class MianWindow:
         self.tooltip = None
 
         #menu
-        menubar = Menu(self.root)
+        menubar =  Menu(self.root)
         menubar.add_command(label='新建(N)',command =self.button_submitUrl )
         menubar.add_command(label='查看(V)')
         menubar.add_command(label='精彩推荐(R)')
@@ -166,7 +169,7 @@ class MianWindow:
         self.treeviewFrame = ttk.Frame(self.frame_center_left)
         self.treeviewFrame.grid(row=0,column=0)
         tree = ttk.Treeview(self.treeviewFrame,height=25)
-        vbar = ttk.Scrollbar(self.frame_center_left, orient=VERTICAL,command=tree.yview)
+        vbar = ttk.Scrollbar(self.frame_center_left, orient =VERTICAL,command=tree.yview)
         channel = Channel('channel.xml')
         for (head,items) in channel.getchannels():
             mybroadhead = tree.insert('',0,text=head)
@@ -180,8 +183,8 @@ class MianWindow:
 
 
         tree.configure(yscrollcommand = vbar.set)
-        tree.grid(row=0,column=0,sticky=NSEW)
-        vbar.grid(row=0,column=1,sticky=NS)
+        tree.grid(row=0,column=0,sticky="NSEW")
+        vbar.grid(row=0,column=1,sticky="NS")
 
 
         def treelabelDoubleButton(event):
